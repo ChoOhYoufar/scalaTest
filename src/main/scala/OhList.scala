@@ -9,9 +9,19 @@ trait MyListTrait[+A] {
 //  def :::(b: MyList) = MyList(b, this)
 
 //  def ::{}
-  def :::[B >: A](b: MyList[B]) = MyList(b, this)
+  def :::[B >: A](b: MyList[B]): MyList[B] = b match {
+      //MyList(1, MyNil):::MyList(2, MyNil)
+      //MyList(1, 2, MyNil)
+      //MyList(1, 2):::MyList(3, MyNil)
+      //MyList(1, MyNil):::MyList(2, 3, MyNil)
+    case b.tail == MyNil => b.head :: this
+    case b.tail != MyNil => MyList(b.head, MyNil) ::: (b.tail :: this)
+  }
   //
-//  def map
+  def map[B](f: A => B): MyList[B] = B match {
+    case MyNil => MyNil
+    case MyList => f(this.head)
+  }
 //  def flatMap
 //  def reverse
 //
@@ -36,10 +46,12 @@ case object MyNil extends MyListTrait[Nothing] {
 //  override def ::: : Unit = ???
 }
 
-MyList(1, MyList(2, MyList(3, MyNil)))
-1::MyList(2, MyNil)
-MyList(1, MyNil):::MyList(2, MyNil)
-
+//MyList(1, MyList(2, MyList(3, MyNil)))
+//1::MyList(2, MyNil)
+val test = MyList(1, MyNil):::MyList(2, MyNil)
+//MyList(1, MyNil).map(x => x + x)
+MyList(1, 2, MyNil).map()
+//print(test)
 
 //sealed trait OhList[+A]
 //case object Nil extends OhList[Nothing]
